@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trie - DSA Fusion</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">DSA Fusion</div>
+      <ul class="nav-links">
+        <li><a href="main.html#topics">Topics</a></li>
+        <li><a href="main.html#key-concepts">Key Concepts</a></li>
+        <li><a href="main.html#about">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="topic-hero">
+    <div class="topic-hero-content">
+      <h1><i class="fas fa-font"></i> Trie</h1>
+      <p>Learn about trie data structures for efficient string storage and retrieval</p>
+    </div>
+  </section>
+
+  <section class="topic-content">
+    <div class="container">
+      <div class="theory-section">
+        <h2>What is a Trie?</h2>
+        <p>A trie (prefix tree) is a tree-like data structure that stores strings by breaking them down into characters. It's optimized for prefix-based searches and autocomplete functionality.</p>
+        
+        <h3>Key Characteristics:</h3>
+        <ul>
+          <li><strong>Prefix Tree:</strong> Shares common prefixes among strings</li>
+          <li><strong>Fast Lookup:</strong> O(m) time complexity for search (m = string length)</li>
+          <li><strong>Space Efficient:</strong> Shares nodes for common prefixes</li>
+          <li><strong>Applications:</strong> Autocomplete, spell checkers, IP routing</li>
+        </ul>
+        
+        <h3>Basic Operations:</h3>
+        <div class="operations-grid">
+          <div class="operation-card">
+            <h4>Insert</h4>
+            <p>Adds a string to the trie</p>
+            <pre><code>function insert(word) {
+  let node = root;
+  for (const char of word) {
+    if (!node.children[char]) {
+      node.children[char] = new TrieNode();
+    }
+    node = node.children[char];
+  }
+  node.isEnd = true;
+}</code></pre>
+          </div>
+          <div class="operation-card">
+            <h4>Search</h4>
+            <p>Checks if a string exists in the trie</p>
+            <pre><code>function search(word) {
+  let node = root;
+  for (const char of word) {
+    if (!node.children[char]) return false;
+    node = node.children[char];
+  }
+  return node.isEnd;
+}</code></pre>
+          </div>
+          <div class="operation-card">
+            <h4>StartsWith</h4>
+            <p>Checks if any string starts with prefix</p>
+            <pre><code>function startsWith(prefix) {
+  let node = root;
+  for (const char of prefix) {
+    if (!node.children[char]) return false;
+    node = node.children[char];
+  }
+  return true;
+}</code></pre>
+          </div>
+          <div class="operation-card">
+            <h4>Autocomplete</h4>
+            <p>Finds all words with given prefix</p>
+            <pre><code>function autocomplete(prefix) {
+  let node = root;
+  for (const char of prefix) {
+    if (!node.children[char]) return [];
+    node = node.children[char];
+  }
+  return findAllWords(node, prefix);
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      
+      <div class="interactive-section">
+        <h2>Interactive Trie</h2>
+        <div class="controls">
+          <input type="text" id="trie-input" placeholder="Enter word" class="input-field">
+          <button onclick="insertTrie()" class="btn btn-primary">Insert</button>
+          <button onclick="searchTrie()" class="btn btn-secondary">Search</button>
+          <button onclick="startsWithTrie()" class="btn btn-accent">StartsWith</button>
+          <button onclick="autocompleteTrie()" class="btn btn-info">Autocomplete</button>
+        </div>
+        <div id="trie-visualization" class="visualization trie-viz"></div>
+        <div id="trie-result" class="result-box"></div>
+      </div>
+
+      <div class="complexity-section">
+        <h3>Time Complexity:</h3>
+        <table class="complexity-table">
+          <tr>
+            <th>Operation</th>
+            <th>Time Complexity</th>
+            <th>Space Complexity</th>
+          </tr>
+          <tr>
+            <td>Insert</td>
+            <td>O(m)</td>
+            <td>O(m)</td>
+          </tr>
+          <tr>
+            <td>Search</td>
+            <td>O(m)</td>
+            <td>O(1)</td>
+          </tr>
+          <tr>
+            <td>StartsWith</td>
+            <td>O(m)</td>
+            <td>O(1)</td>
+          </tr>
+          <tr>
+            <td>Autocomplete</td>
+            <td>O(m + n)</td>
+            <td>O(n)</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="main.html#topics">Topics</a></li>
+          <li><a href="main.html#key-concepts">Key Concepts</a></li>
+          <li><a href="main.html#about">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <p>Email: contact@dsafusion.com</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Created by Ishan Verma and Jaskirat Singh | DSA Fusion &copy; 2023</p>
+    </div>
+  </footer>
+
+  <script>
+    class TrieNode {
+      constructor() {
+        this.children = {};
+        this.isEnd = false;
+      }
+    }
+  
+    const root = new TrieNode();
+    const words = [];
+  
+    function insertTrie() {
+      const word = document.getElementById('trie-input').value.trim().toLowerCase();
+      if (!word) return;
+      
+      let node = root;
+      for (const char of word) {
+        if (!node.children[char]) {
+          node.children[char] = new TrieNode();
+        }
+        node = node.children[char];
+      }
+      node.isEnd = true;
+      words.push(word);
+      
+      visualizeTrie();
+      document.getElementById('trie-input').value = '';
+    }
+  
+    function searchTrie() {
+      const word = document.getElementById('trie-input').value.trim().toLowerCase();
+      if (!word) return;
+      
+      let node = root;
+      for (const char of word) {
+        if (!node.children[char]) {
+          document.getElementById('trie-result').textContent = `${word} not found in trie`;
+          return;
+        }
+        node = node.children[char];
+      }
+      
+      const result = node.isEnd ? `Found "${word}" in trie` : `${word} not found in trie`;
+      document.getElementById('trie-result').textContent = result;
+    }
+  
+    function startsWithTrie() {
+      const prefix = document.getElementById('trie-input').value.trim().toLowerCase();
+      if (!prefix) return;
+      
+      let node = root;
+      for (const char of prefix) {
+        if (!node.children[char]) {
+          document.getElementById('trie-result').textContent = `No words start with "${prefix}"`;
+          return;
+        }
+        node = node.children[char];
+      }
+      
+      document.getElementById('trie-result').textContent = `Found words starting with "${prefix}"`;
+    }
+  
+    function autocompleteTrie() {
+      const prefix = document.getElementById('trie-input').value.trim().toLowerCase();
+      if (!prefix) return;
+      
+      let node = root;
+      for (const char of prefix) {
+        if (!node.children[char]) {
+          document.getElementById('trie-result').textContent = `No words found with prefix "${prefix}"`;
+          return;
+        }
+        node = node.children[char];
+      }
+      
+      const suggestions = findAllWords(node, prefix);
+      document.getElementById('trie-result').textContent = 
+        `Autocomplete for "${prefix}": ${suggestions.join(', ') || 'No suggestions'}`;
+    }
+  
+    function findAllWords(node, prefix) {
+      const results = [];
+      if (node.isEnd) results.push(prefix);
+      
+      for (const [char, childNode] of Object.entries(node.children)) {
+        results.push(...findAllWords(childNode, prefix + char));
+      }
+      
+      return results;
+    }
+  
+    function visualizeTrie() {
+      const container = document.getElementById('trie-visualization');
+      container.innerHTML = '';
+      
+      if (Object.keys(root.children).length === 0) {
+        container.innerHTML = '<p class="empty-message">Trie is empty</p>';
+        return;
+      }
+      
+      const trieContainer = document.createElement('div');
+      trieContainer.className = 'trie-container';
+      
+      buildTrieVisual(root, trieContainer, '');
+      container.appendChild(trieContainer);
+    }
+  
+    function buildTrieVisual(node, parentElement, prefix) {
+      if (!node) return;
+      
+      const children = Object.entries(node.children);
+      if (children.length === 0) return;
+      
+      const nodeContainer = document.createElement('div');
+      nodeContainer.className = 'trie-level';
+      
+      for (const [char, childNode] of children) {
+        const charElement = document.createElement('div');
+        charElement.className = 'trie-char';
+        if (childNode.isEnd) charElement.classList.add('end-node');
+        
+        const charLabel = document.createElement('div');
+        charLabel.className = 'trie-char-label';
+        charLabel.textContent = char;
+        charElement.appendChild(charLabel);
+        
+        if (Object.keys(childNode.children).length > 0) {
+          const childrenContainer = document.createElement('div');
+          childrenContainer.className = 'trie-children';
+          buildTrieVisual(childNode, childrenContainer, prefix + char);
+          charElement.appendChild(childrenContainer);
+        }
+        
+        nodeContainer.appendChild(charElement);
+      }
+      
+      parentElement.appendChild(nodeContainer);
+    }
+  
+    // Initialize visualization
+    visualizeTrie();
+  </script>
+  
+</body>
+</html>
